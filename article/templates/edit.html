@@ -1,0 +1,17 @@
+{% extends "base.html" %} 
+{% block content %}
+<h1>글 편집하기</h1>
+<form
+  action="{% url 'article:edit' id=article.id %}"
+  method="post"
+  enctype="multipart/form-data"
+>
+  {% csrf_token %}   
+  제목: <input name="title" value={{article.title}}></input>
+  본문: <textarea name="content">{{article.content}}</textarea>
+  사진 : <input type="file" name="image" multiple/>
+  사진 : <input type="file" name="image" multiple/>
+  <button type="submit">글 수정</button>
+</form>
+<a href="{% url 'main:index' %}">홈으로</a>
+{% endblock content %}

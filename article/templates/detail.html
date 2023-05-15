@@ -1,0 +1,24 @@
+{% extends "base.html" %} {% block extrahead %}
+<link rel="stylesheet" href="{% static 'blog/css/style.css' %}" />
+<script>
+  console.log("detail 페이지");
+</script>
+{% endblock extrahead %} {% block content %}
+<h1>{{article.title}}</h1>
+<p>
+  {% for image in images %}
+  <img src="{{image.image.url}}" alt="이미지" width="200px" />
+  {% endfor %} {{article.content}}
+</p>
+<a href="{% url 'main:index' %}">홈으로</a>
+<a href="{% url 'article:edit' id=article.id %}">글 수정</a>
+<a href="{% url 'article:destroy' id=article.id %}">글 삭제</a>
+<a href="{% url 'article:new_comment' id=article.id %}">댓글 달기</a>
+<a href="{% url 'article:likes' id=article.id %}"> ♥ {{like_count}}</a>
+
+{% for comment in comments %}
+<hr />
+<p>{{comment.content}}</p>
+<p>{{comment.created_at}} 댓글쓴이: {{ comment.author }}</p>
+
+{% endfor %} {% endblock content %}

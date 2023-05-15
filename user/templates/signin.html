@@ -1,0 +1,8 @@
+{% extends "base.html" %} {% load static %} {% block extrahead %}
+<link rel="stylesheet" href="{% static 'blog/css/style.css' %}" />
+{% endblock extrahead %} {% block content %} 로그인페이지
+<form method="post" action="{% url 'user:signin' %}">
+  {% csrf_token %} {{ form }}
+  <button type="submit">로그인</button>
+</form>
+{% endblock content %}
