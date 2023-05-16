@@ -1,7 +1,12 @@
-{% extends "base.html" %} {% block extrahead %}
-<link rel="stylesheet" href="{% static 'blog/css/style.css' %}" />
+{% extends "base.html" %} {% load static %} {% block extrahead %}
 <script>
-  console.log("detail 페이지");
+  const likeUrl = "{% url 'article:likes' id=article.id %}";
+  const userId = "{{request.user.id}}";
+  const liked = "{{liked}}";
+</script>
+<script defer src="{% static 'article/js/detail.js' %}/">
+  <script>
+     console.log("detail 페이지");
 </script>
 {% endblock extrahead %} {% block content %}
 <h1>{{article.title}}</h1>
@@ -14,7 +19,7 @@
 <a href="{% url 'article:edit' id=article.id %}">글 수정</a>
 <a href="{% url 'article:destroy' id=article.id %}">글 삭제</a>
 <a href="{% url 'article:new_comment' id=article.id %}">댓글 달기</a>
-<a href="{% url 'article:likes' id=article.id %}"> ♥ {{like_count}}</a>
+<button id="like">♥ {{like_count}}</button>
 
 {% for comment in comments %}
 <hr />

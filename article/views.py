@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Article, Comment,ArticleImage
+from django.http import JsonResponse
 
 # Create your views here.
 
@@ -25,8 +26,13 @@ def detail(request, id):
     images = article.images.all()
     comments = article.comments.all()
     like_count = article.total_like()
+    liked  = 0
+    if request.user.is_authenticated:
+        if article.like.filter(id=request.user.id).exists():
+            liked = 1
 
-    return render(request, 'detail.html', {'article': article, 'comments': comments,'images':images,'like_count':like_count})
+
+    return render(request, 'detail.html', {'article': article, 'comments': comments,'images':images,'like_count':like_count, 'liked': liked})
 
 
 def edit(request, id):
@@ -66,17 +72,17 @@ def destroy_comment(request, id):
     return redirect('article:detail', id = id)
 
 def post_like(request, id):
-    if request.user.is_anonymous:
-        return redirect('user:signin')
-
+    article = get_object_or_404(Article, pk=id)
+    user_id = request.GET.get('user')
+    like = article.like.filter(id=user_id)
+    if like:
+        like.article = get_object_or_404(Article, pk=id)
+        like.article.like.remove(request.user)
+        count = article.total_like()
+        return JsonResponse({'message':'removed', 'count':count})
     else:
-        article = get_object_or_404(Article, pk=id)
-        like=article.like.filter(user=request.user)
-        if like:
-            like.remove(request.user)
-            return redirect('article:detail', id)
-        else:
-            like.article = get_object_or_404(Article, pk=id)
-            like.like.add(request.user) 
-            return redirect('article:detail', id)
+        like.article = get_object_or_404(Article, pk=id)
+        like.article.like.add(request.user)
+        count = article.total_like()
+        return JsonResponse({'message':'created', 'count': count})
  

@@ -1,7 +1,8 @@
-{% extends "base.html" %} {% block extrahead %}
-<script>
-  console.log("Hello World");
+{% extends "base.html" %} {% load static %} {% block extrahead %}
+
+<script defer src="{% static 'main/js/index.js' %}">
 </script>
+
 {% endblock extrahead %} {% block content %} {% if user.is_authenticated %}
 <a href="{% url 'user:signout' %}">로그아웃</a> <br />
 <a href="{% url 'article:new' %}">글 작성</a>
@@ -11,8 +12,8 @@
 {% endif %}
 
 <hr />
-
-{% for article in articles %}
+<div class="article-list"></div>
+{% comment %} {% for article in articles %}
 <div>
   <a href="{% url 'article:detail' id=article.id %}">
     {{ article.title}} <br />
@@ -26,4 +27,4 @@
     <a href="{% url 'article:destroy' id=article.id %}">글 삭제</a>
   </p>
 </div>
-{% endfor %} {% endblock content %}
+{% endfor %} {% endcomment %} {% endblock content %}
